@@ -3,10 +3,36 @@
 % submitting.
 
 % Loading the data: this loads X, Xnoisy, and Y.
-load('../data/breast-cancer-data-fixed.mat');
+load('/data/breast-cancer-data-fixed.mat');
 
 %% 2.1
 answers{1} = 'This is where your answer to 2.1 should go. Just as one long string in a cell array';
+
+[m,n] = size(X);
+order = randperm(m);
+ordertrain = order <401;
+ordertest = order >400;
+number = [1:m];
+
+vtest = number.*ordertest;
+vtest = vtest(vtest~=0);
+test = X(vtest,:);
+Ytest = Y(vtest,:);
+
+vtrain = number.*ordertrain;
+vtrain = vtrain(vtrain~=0);
+train = X(vtrain,:);
+Ytrain = Y(vtrain,:);
+
+part = make_xval_partition(400,12);
+knn_xval_error(1,train,Ytrain,part,'l2');
+
+testLabel = knn_test(1,train,Ytrain,test,'l2');
+error = Ytest-testLabel;
+error = error~=0;
+j = sum(error);
+[m,n] = size(error);
+true_error = j/m;
 
 % Plotting with error bars: first, arrange your data in a matrix as
 % follows:

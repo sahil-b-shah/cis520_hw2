@@ -38,6 +38,6 @@ for i = 1:N
     difference = difference~=0;
     j = sum(difference);
     [m,n] = size(difference);
-    sumz(i) = j/m
+    sumz(i) = j/m;
 end
 error =(sum(sumz))/N
