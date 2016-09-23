@@ -6,78 +6,78 @@
 load('/data/breast-cancer-data-fixed.mat');
 
 %% 2.1
-answers{1} = 'This is where your answer to 2.1 should go. Just as one long string in a cell array';
-distFunc='l2';
-xdata = X;
-for z = 1:2
-    for j = 1:4
-        for i = 1:100
-            [m,n] = size(xdata);
-            order = randperm(m);
-            ordertrain = order <401;
-            ordertest = order >400;
-            number = [1:m];
-
-            vtest = number.*ordertest;
-            vtest = vtest(vtest~=0);
-            test = xdata(vtest,:);
-            Ytest = Y(vtest,:);
-
-            vtrain = number.*ordertrain;
-            vtrain = vtrain(vtrain~=0);
-            train = xdata(vtrain,:);
-            Ytrain = Y(vtrain,:);
-
-            part = make_xval_partition(400,2^j);
-            nfold_error(i,j,z) = knn_xval_error(1,train,Ytrain,part,distFunc);
-
-            testLabel = knn_test(1,train,Ytrain,test,distFunc);
-            error = Ytest-testLabel;
-            error = error~=0;
-            r = sum(error);
-            [m,n] = size(error);
-            true_error(i,j,z) = r/m;
-        end
-    end
-    xdata = X_noisy;
-end
-difference = nfold_error-true_error;
-sum(difference)/100;
-
-nfold_errs = nfold_error(:,:,1);
-y = mean(nfold_errs);
-e= std(nfold_errs);
-x = [2 4 8 16];
-errorbar(x,y,e);
-hold on;
-test_error = true_error(:,:,1);
-y = mean(test_error);
-e = std(test_error);
-errorbar(x,y,e,'r');
-xlabel('N-folds');
-ylabel('Average Error');
-title('Average Cross Validation Error vs. N-fold Regular');
-legend('N-fold error','Test error');
-print('-djpeg', 'plot_2.1.jpg');
-hold off;
-
-figure(2);
-nfold_errs = nfold_error(:,:,2);
-y = mean(nfold_errs);
-e= std(nfold_errs);
-x = [2 4 8 16];
-errorbar(x,y,e);
-hold on;
-test_error = true_error(:,:,2);
-y = mean(test_error);
-e = std(test_error);
-errorbar(x,y,e,'r');
-xlabel('N-folds');
-ylabel('Average Error');
-title('Average Cross Validation Error vs. N-fold Noisy');
-legend('N-fold error','Test error');
-print('-djpeg', 'plot_2.1-noisy.jpg');
-hold off;
+% answers{1} = 'This is where your answer to 2.1 should go. Just as one long string in a cell array';
+% distFunc='l2';
+% xdata = X;
+% for z = 1:2
+%     for j = 1:4
+%         for i = 1:100
+%             [m,n] = size(xdata);
+%             order = randperm(m);
+%             ordertrain = order <401;
+%             ordertest = order >400;
+%             number = [1:m];
+% 
+%             vtest = number.*ordertest;
+%             vtest = vtest(vtest~=0);
+%             test = xdata(vtest,:);
+%             Ytest = Y(vtest,:);
+% 
+%             vtrain = number.*ordertrain;
+%             vtrain = vtrain(vtrain~=0);
+%             train = xdata(vtrain,:);
+%             Ytrain = Y(vtrain,:);
+% 
+%             part = make_xval_partition(400,2^j);
+%             nfold_error(i,j,z) = knn_xval_error(1,train,Ytrain,part,distFunc);
+% 
+%             testLabel = knn_test(1,train,Ytrain,test,distFunc);
+%             error = Ytest-testLabel;
+%             error = error~=0;
+%             r = sum(error);
+%             [m,n] = size(error);
+%             true_error(i,j,z) = r/m;
+%         end
+%     end
+%     xdata = X_noisy;
+% end
+% difference = nfold_error-true_error;
+% sum(difference)/100;
+% 
+% nfold_errs = nfold_error(:,:,1);
+% y = mean(nfold_errs);
+% e= std(nfold_errs);
+% x = [2 4 8 16];
+% errorbar(x,y,e);
+% hold on;
+% test_error = true_error(:,:,1);
+% y = mean(test_error);
+% e = std(test_error);
+% errorbar(x,y,e,'r');
+% xlabel('N-folds');
+% ylabel('Average Error');
+% title('Average Cross Validation Error vs. N-fold Regular');
+% legend('N-fold error','Test error');
+% print('-djpeg', 'plot_2.1.jpg');
+% hold off;
+% 
+% figure(2);
+% nfold_errs = nfold_error(:,:,2);
+% y = mean(nfold_errs);
+% e= std(nfold_errs);
+% x = [2 4 8 16];
+% errorbar(x,y,e);
+% hold on;
+% test_error = true_error(:,:,2);
+% y = mean(test_error);
+% e = std(test_error);
+% errorbar(x,y,e,'r');
+% xlabel('N-folds');
+% ylabel('Average Error');
+% title('Average Cross Validation Error vs. N-fold Noisy');
+% legend('N-fold error','Test error');
+% print('-djpeg', 'plot_2.1-noisy.jpg');
+% hold off; 
 % Plotting with error bars: first, arrange your data in a matrix as
 % follows:
 %
@@ -106,6 +106,76 @@ hold off;
 %% 2.2
 answers{2} = 'This is where your answer to 2.2 should go. Short and sweet is the key.';
 
+k = [1,2,3,5,8,13,21,34];
+xdata = X;
+for z = 1:2
+    for j = 1:8
+        for i = 1:100
+            [m,n] = size(xdata);
+            order = randperm(m);
+            ordertrain = order <401;
+            ordertest = order >400;
+            number = [1:m];
+
+            vtest = number.*ordertest;
+            vtest = vtest(vtest~=0);
+            test = xdata(vtest,:);
+            Ytest = Y(vtest,:);
+
+            vtrain = number.*ordertrain;
+            vtrain = vtrain(vtrain~=0);
+            train = xdata(vtrain,:);
+            Ytrain = Y(vtrain,:);
+
+            part = make_xval_partition(400,10);
+            nfold_error(i,j,z) = knn_xval_error(k(j),train,Ytrain,part,distFunc);
+
+            testLabel = knn_test(k(j),train,Ytrain,test,distFunc);
+            error = Ytest-testLabel;
+            error = error~=0;
+            r = sum(error);
+            [m,n] = size(error);
+            true_error(i,j,z) = r/m;
+        end
+    end
+    xdata = X_noisy;
+end
+
+figure(3);
+nfold_errs = nfold_error(:,:,1);
+y = mean(nfold_errs);
+e= std(nfold_errs);
+x = k;
+errorbar(x,y,e);
+hold on;
+test_error = true_error(:,:,1);
+y = mean(test_error);
+e = std(test_error);
+errorbar(x,y,e,'r');
+xlabel('K');
+ylabel('Average Error');
+title('Average Cross Validation Error vs. K Regular');
+legend('N-fold error','Test error');
+print('-djpeg', 'plot_2.2-k.jpg');
+hold off;
+
+figure(4);
+nfold_errs = nfold_error(:,:,2);
+y = mean(nfold_errs);
+e= std(nfold_errs);
+x = k;
+errorbar(x,y,e);
+hold on;
+test_error = true_error(:,:,2);
+y = mean(test_error);
+e = std(test_error);
+errorbar(x,y,e,'r');
+xlabel('K');
+ylabel('Average Error');
+title('Average Cross Validation Error vs. K Noisy');
+legend('N-fold error','Test error');
+print('-djpeg', 'plot_2.2-k-noisy.jpg');
+hold off;
 % Save your plots as follows:
 %
 %  noisy data, k-nn error vs. K --> plot_2.2-k-noisy.jpg
