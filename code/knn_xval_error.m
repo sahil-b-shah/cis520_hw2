@@ -14,9 +14,9 @@ function [error] = knn_xval_error(K, X, Y, part, distFunc)
 %
 % SEE ALSO
 %   MAKE_XVAL_PARTITION, KNN_TEST
-z = max(part)
-sumz = zeros(z,1)
-for i = 1:z
+N = max(part);
+sumz = zeros(N,1);
+for i = 1:N
     parttest = part==i;
     parttrain = part~=i;
     [m,n] = size(X);
@@ -39,6 +39,4 @@ for i = 1:z
     [m,n] = size(difference);
     sumz(i) = j/m;
 end
-sumz;
-error =(sum(sumz))/z
-%testLabels = knn_test(K,X,Y,test0,'l2');
+error =(sum(sumz))/N;

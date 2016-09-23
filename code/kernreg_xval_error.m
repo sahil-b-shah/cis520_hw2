@@ -1,4 +1,4 @@
-function [error] = kernreg_xval_error(sigma, X, Y, parts, distFunc)
+function [error] = kernreg_xval_error(sigma, X, Y, part, distFunc)
 % KERNREG_XVAL_ERROR - Kernel regression cross-validation error.
 %
 % Usage:
@@ -15,4 +15,29 @@ function [error] = kernreg_xval_error(sigma, X, Y, parts, distFunc)
 % SEE ALSO
 %   MAKE_XVAL_PARTITION, KERNREG_TEST
 
-% FILL IN YOUR CODE HERE
+N = max(part);
+sumz = zeros(N,1);
+for i = 1:N
+    parttest = part==i;
+    parttrain = part~=i;
+    [m,n] = size(X);
+    number = [1:m];
+
+    vtest = number.*parttest;
+    vtest = vtest(vtest~=0);
+    test = X(vtest,:);
+    Ytest = Y(vtest,:);
+
+    vtrain = number.*parttrain;
+    vtrain = vtrain(vtrain~=0);
+    train = X(vtrain,:);
+    Ytrain = Y(vtrain,:);
+
+    testLabels = kernreg_test(sigma,train,Ytrain,test,distFunc);
+    difference = testLabels-Ytest;
+    difference = difference~=0;
+    j = sum(difference);
+    [m,n] = size(difference);
+    sumz(i) = j/m
+end
+error =(sum(sumz))/N
