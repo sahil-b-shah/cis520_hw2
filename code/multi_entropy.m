@@ -10,3 +10,7 @@ function [H] = multi_entropy(p)
 %  N distributions over K values.
 
 % YOUR CODE GOES HERE
+
+p_times_logp = @(x) min(0, x.*log2(x));
+
+H = -1.*sum(p_times_logp(p), 1);
