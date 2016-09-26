@@ -33,6 +33,7 @@ for i = 1:N
     Ytrain = Y(vtrain,:);
 
     testLabels = knn_test(K,train,Ytrain,test,distFunc);
+    testLabels = round(testLabels);
     difference = testLabels-Ytest;
     difference = difference~=0;
     j = sum(difference);

@@ -34,10 +34,11 @@ for i = 1:N
     Ytrain = Y(vtrain,:);
 
     testLabels = kernreg_test(sigma,train,Ytrain,test,distFunc);
+    testLabels = round(testLabels);
     difference = testLabels-Ytest;
     difference = difference~=0;
     j = sum(difference);
     [m,n] = size(difference);
     sumz(i) = j/m;
 end
-error =(sum(sumz))/N
+error =(sum(sumz))/N;
