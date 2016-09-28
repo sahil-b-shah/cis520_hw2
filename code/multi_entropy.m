@@ -13,4 +13,9 @@ function [H] = multi_entropy(p)
 
 p_times_logp = @(x) min(0, x.*log2(x));
 
-H = -1.*sum(p_times_logp(p), 1);
+if size(p, 1) == 1
+    H = - (p_times_logp(p) + p_times_logp(1-p));
+else
+    H = -1.*sum(p_times_logp(p), 1);
+end
+

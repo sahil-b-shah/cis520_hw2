@@ -3,16 +3,19 @@
 % submitting.
 
 % Loading the data
-data = load('../data/mnist_all.mat');
+data = load('/data/mnist_all.mat');
 
 % Running a training set for binary decision tree classifier
-[X Y] = get_digit_dataset(data, {'7','9'}, 'train');
+%[X Y] = get_digit_dataset(data, {'1','2','3','4','5','6','7','8','9'}, 'train');
+[X Y] = get_digit_dataset(data, {'7','9','3'}, 'train');
 
 %% Train a depth 4 binary decision tree
-dt = dt_train(X, Y, 4);
-
+%dt = dt_train(X, Y, 4);
+dt = dt_train_multi(X, Y, 4);
 %%
-[Xtest Ytest] = get_digit_dataset(data, {'7','9'}, 'test');
+[Xtest Ytest] = get_digit_dataset(data, {'1','2','3','4','5','6','7','8','9'}, 'test');
+%[Xtest Ytest] = get_digit_dataset(data, {'7','9'}, 'test');
+
 Yhat = zeros(size(Ytest));
 for i = 1:size(Xtest,1)
     Yhat(i) = dt_value(dt, Xtest(i,:)) >= 0.5;

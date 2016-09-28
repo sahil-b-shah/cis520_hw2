@@ -21,8 +21,8 @@ function root = build_dt(X, Y, depth_limit)
 % SEE ALSO
 %    DT_CHOOSE_FEATURE_MULTI, DT_VALUE
 
-% Y must be 1's and 0's.
-assert(isequal(unique(Y), [0; 1]), 'Y must be 1''s and 0''s.');
+% % Y must be 1's and 0's.
+% assert(isequal(unique(Y), [0; 1]), 'Y must be 1''s and 0''s.');
 
 % Pre-compute the range of each feature.
 for i = 1:size(X, 2)
@@ -44,11 +44,27 @@ function [node] = split_node(X, Y, Xrange, default_value, colidx, depth, depth_l
 %    depth - current depth of the tree
 %    depth_limit - maximum depth of the tree
 
+% Build Z
+unique_y_elems = unique(Y);
+if numel(unique_y_elems) > 2
+    Z = zeros(size(Y, 1), numel(unique_y_elems));
+    for i=1:length(Y)
+      k_val = Y(i);
+      Z(i, k_val) = 1;
+    end
+else
+    Z = Y;
+end
+
+% Z_all_one = sum(all(Z), 2);
+% Z_all_zero = sum(~all(Z), 2);
+
 % The various cases at which we will return a terminal (leaf) node:
 %    - we are at the maximum depth
-%    - we have Y equal to all 0's or all 1's 
+%    - we Z_k equal to all 0's or all 1's 
 %    - we have only a single (or no) examples left
 %    - we have no features left to split on
+
 if depth == depth_limit || all(Y==0) || all(Y==1) || numel(Y) <= 1 || numel(colidx) == 0
     node.terminal = true;
     node.fidx = [];
@@ -68,7 +84,7 @@ end
 node.terminal = false;
 
 % Choose a feature to split on using information gain.
-[node.fidx node.fval max_ig] = dt_choose_feature_multi(X, Y, Xrange, colidx);
+[node.fidx node.fval max_ig] = dt_choose_feature_multi(X, Z, Xrange, colidx);
 
 % Remove this feature from future consideration.
 colidx(colidx==node.fidx) = [];
